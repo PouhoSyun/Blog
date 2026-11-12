@@ -1,0 +1,25 @@
+[Unit]
+Description=PouhoSyun Personal Blog
+After=network.target
+
+[Service]
+Type=simple
+User=blog
+Group=blog
+WorkingDirectory=/opt/pouhosyun-blog
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=4180
+# 部署前用 command -v node 核实；不要直接使用 root 私有的 nvm 路径。
+ExecStart=/usr/bin/node /opt/pouhosyun-blog/server.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/pouhosyun-blog/data /opt/pouhosyun-blog/uploads
+
+[Install]
+WantedBy=multi-user.target
