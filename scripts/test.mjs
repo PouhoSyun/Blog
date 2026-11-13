@@ -43,3 +43,12 @@ test('authentication, publication, persistence and CSRF', async () => {
  assert.equal((await (await fetch(base+'/search.json')).json()).posts.length,1);
  } finally {await stop();await rm(dir,{recursive:true,force:true});}
 });
+
+test('visual migration preserves custom settings and articles', async () => {
+ const {normalizeData}=await import('../lib/store.mjs');
+ const old=normalizeData({site:{title:'溯光 · PouhoSyun',heroImage:'/assets/hero.svg',accent:'#2f6f6b'},posts:[{id:'keep'}]});
+ assert.equal(old.site.title,'荔枝新园'); assert.equal(old.site.heroImage,'/assets/lychee.png'); assert.equal(old.posts[0].id,'keep');
+ const custom=normalizeData({site:{title:'自定义名称',heroImage:'/uploads/custom.png',accent:'#123456'}});
+ assert.equal(custom.site.title,'自定义名称'); assert.equal(custom.site.heroImage,'/uploads/custom.png'); assert.equal(custom.site.accent,'#123456');
+ assert.deepEqual(normalizeData(old),old);
+});
