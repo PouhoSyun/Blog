@@ -19,7 +19,7 @@ test('authentication, publication, persistence and CSRF', async () => {
  const port=19481, base=`http://127.0.0.1:${port}`;
  let child;
  const start=async()=>{
- child=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:String(port),HOST:'127.0.0.1',BLOG_DATA_FILE:join(dir,'blog.json'),BLOG_UPLOAD_DIR:join(dir,'uploads'),BLOG_ADMIN_PASSWORD:'test-secret-9284',BLOG_SITE_ORIGIN:base,NODE_ENV:'development'},stdio:'ignore'});
+ child=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:String(port),HOST:'127.0.0.1',BLOG_DATA_FILE:join(dir,'blog.json'),BLOG_UPLOAD_DIR:join(dir,'uploads'),BLOG_ADMIN_USER:'admin',BLOG_ADMIN_PASSWORD_HASH:'',BLOG_ADMIN_TOTP_SECRET:'',BLOG_COOKIE_SECURE:'0',BLOG_TRUST_PROXY:'0',BLOG_ALLOWED_ORIGINS:'',BLOG_TEST:'0',BLOG_ADMIN_PASSWORD:'test-secret-9284',BLOG_SITE_ORIGIN:base,NODE_ENV:'development'},stdio:'ignore'});
  for(let i=0;i<80;i++){try{if((await fetch(base+'/api/auth/session')).ok)return;}catch{} await new Promise(r=>setTimeout(r,50));}throw Error('startup failed');
  };
  const stop=async()=>{if(child&&!child.killed){child.kill();await new Promise(r=>child.once('exit',r));}};
